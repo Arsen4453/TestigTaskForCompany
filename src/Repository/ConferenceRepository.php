@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Conference;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use http\Client\Response;
+use Twig\Environment;
+use App\Repository\CommentRepository;
+
+/**
+ * @extends ServiceEntityRepository<Conference>
+ */
+class ConferenceRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Conference::class);
+    }
+
+
+    public function show(Environment $twig, Conference $conference, CommentRepository $commentRepository): string
+    {
+        return new Response($twig->render('conference/show.html.twig', [
+            'conference' => $conference,
+            'comments' => $commentRepository->findBy(['conference' => $conference], ['createdAt' => 'DESC']),
+        ]));
+    }
+
+
+
+    //    /**
+    //     * @return Conference[] Returns an array of Conference objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('c.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Conference
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
+}
