@@ -8,6 +8,10 @@ doctrine:
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
+
+        # Only manage guestbook tables; the DB also holds fraud-microservice
+        # tables (and PostGIS's spatial_ref_sys) that Doctrine must ignore.
+        schema_filter: ~^(conference|comment|messenger_messages|sessions|doctrine_migration_versions)(_id_seq)?$~
     orm:
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
